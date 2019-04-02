@@ -151,17 +151,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ball.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ball.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Breakout.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
