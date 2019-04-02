@@ -10,7 +10,7 @@ public:
 	explicit Block(Vector2 pos, int h, int w, Uint8 r, Uint8 g, Uint8 b);
 
 	SDL_Surface* GetSurface() const { return surface; }
-	Vector2 GetPos() const { return pos; }
+	Vector2* GetPos() { return &pos; }
 	int GetHeight() const { return height; }
 	int GetWidth() const { return width; }
 
