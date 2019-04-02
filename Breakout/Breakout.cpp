@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "Timer.h"
 #include "Player.h"
+#include "Block.h"
 
 /*two global variables just to set screen size*/
 const int SCREEN_HEIGHT = 750;
@@ -67,7 +68,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
-	SDL_Surface* surface = SDL_LoadBMP("Pumpkin.bmp");
+	SDL_Surface* surface = Block(Vector2(),50,100,127,127,127).GetSurface();
 	if (surface == nullptr) {
 		std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
 		Close(window);
@@ -95,7 +96,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		/*Input manager*/
 		timer.UpdateDeltaTime();
 		inputManager.Update();
-		std::cout << timer.GetDeltaTime() << std::endl;
+		//std::cout << timer.GetDeltaTime() << std::endl;
 		player.MovePlayer();
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
