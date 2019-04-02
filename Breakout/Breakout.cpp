@@ -1,7 +1,8 @@
-
 #include <SDL.h>
 #include <iostream>
 #include "InputManager.h"
+#include "Timer.h"
+#include "Player.h"
 
 /*two global variables just to set screen size*/
 const int SCREEN_HEIGHT = 750;
@@ -80,12 +81,9 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	coords.w = surface->w;
 	coords.x = 0;
 	coords.y = 0;
-	float x = 0.0f;
+	Player player = Player();
 	float y = SCREEN_HEIGHT-150;
-	Uint64 now = SDL_GetPerformanceCounter();
-	Uint64 last;
-	double deltaTime = 0;
-	const float speed = .5f;
+	Timer& timer = Timer::GetInstance();
 
 	SDL_FreeSurface(surface);
 	/*renderer init STOP*/
@@ -95,37 +93,16 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	/*GameLoop*/
 	while (true) {
 		/*Input manager*/
-		last = now;
-		now = SDL_GetPerformanceCounter();
-		deltaTime = static_cast<double>(now - last)*1000 / SDL_GetPerformanceFrequency();
+		timer.UpdateDeltaTime();
 		inputManager.Update();
-		std::cout << deltaTime << std::endl;
-		/*if (inputManager.KeyStillDown(SDL_SCANCODE_UP)) {
-			y -= speed * (float)deltaTime;
-		}
-		if (inputManager.KeyStillDown(SDL_SCANCODE_DOWN)) {
-			y += speed * (float)deltaTime;
-		}*/
-		if (inputManager.KeyStillDown(SDL_SCANCODE_LEFT)) {
-			x -= speed * static_cast<float>(deltaTime);
-		}
-		if (inputManager.KeyStillDown(SDL_SCANCODE_RIGHT)) {
-			x += speed * static_cast<float>(deltaTime);
-		}
-		if (inputManager.MouseDown(SDL_BUTTON_LEFT)) {
-
-			std::cout << "You clicked the left mouse button!" << std::endl;
-		}
-		if (inputManager.MouseUp(SDL_BUTTON_LEFT)) {
-
-			std::cout << "You released the left mouse button!" << std::endl;
-		}
+		std::cout << timer.GetDeltaTime() << std::endl;
+		player.MovePlayer();
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
 		}
 
 		/*renderer*/
-		coords.x = static_cast<int>(x);
+		coords.x = static_cast<int>(player.GetPos());
 		coords.y = static_cast<int>(y);
 		SDL_RenderCopy(renderer, drawable, nullptr, &coords);
 		SDL_RenderPresent(renderer);
