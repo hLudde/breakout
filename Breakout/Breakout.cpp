@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Vector2.h"
 #include "Player.h"
+#include "Block.h"
 
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
