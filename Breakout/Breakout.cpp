@@ -3,8 +3,8 @@
 #include "InputManager.h"
 #include "Timer.h"
 #include "Vector2.h"
-#include "Player.h"
 #include "Block.h"
+#include "Player.h"
 
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
