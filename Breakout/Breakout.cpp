@@ -2,7 +2,11 @@
 #include <iostream>
 #include "InputManager.h"
 #include "Timer.h"
+#include "Vector2.h"
 #include "Player.h"
+
+#define PLAYER_WIDTH 100
+#define PLAYER_HEIGHT 25
 
 /*two global variables just to set screen size*/
 const int SCREEN_HEIGHT = 750;
@@ -25,12 +29,11 @@ int main(int argc, char* argv[]) {
 		Close(appWindow);
 		return 0;
 	};
-
 	/*Prepare render and run game*/
 	std::cout << "Window : " << appWindow << " Created!" << std::endl;
 	LoadAndDisplayImage(appWindow, appScreenSurface);
 	Close(appWindow);
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 /*initializing function for SDL*/
@@ -64,10 +67,11 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		Close(window);
 		return EXIT_FAILURE;
 	}
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 255);
 	SDL_RenderClear(renderer);
 
-	SDL_Surface* surface = SDL_LoadBMP("Pumpkin.bmp");
+	Player player = Player(Vector2(0, 0), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F	);
+	SDL_Surface* surface = player.GetSurface();//Block(Vector2(0 , SCREEN_HEIGHT - 150), PLAYER_HEIGHT, PLAYER_WIDTH, 255, 0,0).GetSurface();
 	if (surface == nullptr) {
 		std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
 		Close(window);
@@ -81,7 +85,6 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	coords.w = surface->w;
 	coords.x = 0;
 	coords.y = 0;
-	Player player = Player();
 	float y = SCREEN_HEIGHT-150;
 	Timer& timer = Timer::GetInstance();
 
@@ -95,7 +98,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		/*Input manager*/
 		timer.UpdateDeltaTime();
 		inputManager.Update();
-		std::cout << timer.GetDeltaTime() << std::endl;
+		//std::cout << timer.GetDeltaTime() << std::endl;
 		player.MovePlayer();
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
@@ -108,7 +111,6 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		SDL_RenderPresent(renderer);
 		SDL_RenderClear(renderer);
 	}
-	return EXIT_SUCCESS;
 }
 
 /*cleaner and exiting function*/
