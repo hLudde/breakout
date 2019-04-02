@@ -6,7 +6,7 @@ class Block {
 public:
 	explicit Block(Vector2 pos);
 
-	explicit Block(Vector2 pos, int h, int w, Uint32 color);
+	explicit Block(Vector2 pos, int h, int w, Uint8 r, Uint8 g, Uint8 b);
 
 protected:
 	Vector2 pos;
