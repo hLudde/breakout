@@ -1,7 +1,4 @@
-// Breakout.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-//#include "pch.h"
-#include <stdio.h>
+
 #include <SDL.h>
 #include <iostream>
 #include "InputManager.h"
@@ -11,32 +8,32 @@ const int SCREEN_HEIGHT = 750;
 const int SCREEN_WIDTH = 750+50;
 
 /*Function signatures*/
-bool init(SDL_Window* &window, SDL_Surface* &screenSurface);
-void close(SDL_Window* &window);
-int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface);
+bool Init(SDL_Window* &window, SDL_Surface* &screenSurface);
+void Close(SDL_Window* &window);
+int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface);
 
 /*main*/
-int main(int argc, char* args[]) {
+int main(int argc, char* argv[]) {
 
 	/*Create window and surface variables*/
-	SDL_Window* appWindow = NULL;
-	SDL_Surface* appScreenSurface = NULL;
+	SDL_Window* appWindow = nullptr;
+	SDL_Surface* appScreenSurface = nullptr;
 
 	/*initialise SDL*/
-	if (!init(appWindow, appScreenSurface)) {
-		close(appWindow);
+	if (!Init(appWindow, appScreenSurface)) {
+		Close(appWindow);
 		return 0;
 	};
 
 	/*Prepare render and run game*/
 	std::cout << "Window : " << appWindow << " Created!" << std::endl;
-	loadAndDiplayImage(appWindow, appScreenSurface);
-	close(appWindow);
+	LoadAndDisplayImage(appWindow, appScreenSurface);
+	Close(appWindow);
 	return 0;
 }
 
 /*initializing function for SDL*/
-bool init(SDL_Window* &window, SDL_Surface* &screenSurface) {
+bool Init(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	bool success = true;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -56,16 +53,14 @@ bool init(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	return success;
 }
 
-/*renderer init and gameloop*/
-int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
+/*renderer init and gameLoop*/
+int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
-	/*renderer init START*/
-	SDL_Renderer* renderer;
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	if (renderer == nullptr) {
 		std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
-		close(window);
+		Close(window);
 		return EXIT_FAILURE;
 	}
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -74,7 +69,7 @@ int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	SDL_Surface* surface = SDL_LoadBMP("Pumpkin.bmp");
 	if (surface == nullptr) {
 		std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
-		close(window);
+		Close(window);
 		return EXIT_FAILURE;
 	}
 
@@ -87,22 +82,22 @@ int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	coords.y = 0;
 	float x = 0.0f;
 	float y = SCREEN_HEIGHT-150;
-	Uint64 NOW = SDL_GetPerformanceCounter();
-	Uint64 LAST = 0;
+	Uint64 now = SDL_GetPerformanceCounter();
+	Uint64 last;
 	double deltaTime = 0;
-	float speed = .5f;
+	const float speed = .5f;
 
 	SDL_FreeSurface(surface);
 	/*renderer init STOP*/
 
-	InputManager& inputManager = InputManager::getInstance();
+	InputManager& inputManager = InputManager::GetInstance();
 
-	/*Gameloop*/
+	/*GameLoop*/
 	while (true) {
 		/*Input manager*/
-		LAST = NOW;
-		NOW = SDL_GetPerformanceCounter();
-		deltaTime = (double)(NOW - LAST)*1000 / SDL_GetPerformanceFrequency();
+		last = now;
+		now = SDL_GetPerformanceCounter();
+		deltaTime = static_cast<double>(now - last)*1000 / SDL_GetPerformanceFrequency();
 		inputManager.Update();
 		std::cout << deltaTime << std::endl;
 		/*if (inputManager.KeyStillDown(SDL_SCANCODE_UP)) {
@@ -112,10 +107,10 @@ int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 			y += speed * (float)deltaTime;
 		}*/
 		if (inputManager.KeyStillDown(SDL_SCANCODE_LEFT)) {
-			x -= speed * (float)deltaTime;
+			x -= speed * static_cast<float>(deltaTime);
 		}
 		if (inputManager.KeyStillDown(SDL_SCANCODE_RIGHT)) {
-			x += speed * (float)deltaTime;
+			x += speed * static_cast<float>(deltaTime);
 		}
 		if (inputManager.MouseDown(SDL_BUTTON_LEFT)) {
 
@@ -126,7 +121,7 @@ int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 			std::cout << "You released the left mouse button!" << std::endl;
 		}
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
-			close(window);
+			Close(window);
 		}
 
 		/*renderer*/
@@ -140,20 +135,9 @@ int loadAndDiplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 }
 
 /*cleaner and exiting function*/
-void close(SDL_Window* &window) {
+void Close(SDL_Window* &window) {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 	exit(0);
 	return;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

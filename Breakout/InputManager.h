@@ -2,7 +2,7 @@
 #include <iostream>
 class InputManager {
 public:
-	static InputManager& getInstance() {
+	static InputManager& GetInstance() {
 		static InputManager instance;
 		return instance;
 	}
@@ -10,14 +10,14 @@ public:
 	InputManager(InputManager const&) = delete;
 	void operator=(InputManager const&) = delete;
 
-	bool KeyDown(int iKeyIndex);
-	bool KeyStillDown(int iKeyIndex);
-	bool KeyUp(int iKeyIndex);
-	bool KeyStillUp(int iKeyIndex);
-	bool MouseDown(int iButton);
-	bool MouseStillDown(int iButton);
-	bool MouseUp(int iButton);
-	bool MouseStillUp(int iButton);
+	bool KeyDown(int iKeyIndex) const;
+	bool KeyStillDown(int iKeyIndex) const;
+	bool KeyUp(int iKeyIndex) const;
+	bool KeyStillUp(int iKeyIndex) const;
+	bool MouseDown(int iButton) const;
+	bool MouseStillDown(int iButton) const;
+	bool MouseUp(int iButton) const;
+	bool MouseStillUp(int iButton) const;
 
 	void Update();
 

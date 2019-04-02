@@ -1,4 +1,3 @@
-#pragma once
 #include <SDL.h>
 #include "InputManager.h"
 
@@ -9,34 +8,34 @@ void InputManager::Update() {
 	buttons = SDL_GetRelativeMouseState(&mouseX, &mouseY);
 }
 
-bool InputManager::KeyUp(int iKeyIndex){
+bool InputManager::KeyUp(const int iKeyIndex) const {
 	return !keys[iKeyIndex] && oldKeys.get()[iKeyIndex];	
 }
 
-bool InputManager::KeyStillUp(int iKeyIndex){
+bool InputManager::KeyStillUp(const int iKeyIndex) const {
 	return !keys[iKeyIndex] && !oldKeys.get()[iKeyIndex];
 }
 
-bool InputManager::KeyDown(int iKeyIndex){
+bool InputManager::KeyDown(const int iKeyIndex) const {
 	return keys[iKeyIndex] && !oldKeys.get()[iKeyIndex];
 }
 
-bool InputManager::KeyStillDown(int iKeyIndex){
+bool InputManager::KeyStillDown(const int iKeyIndex) const {
 	return keys[iKeyIndex] && oldKeys.get()[iKeyIndex];
 }
 
-bool InputManager::MouseUp(int iButton){
+bool InputManager::MouseUp(const int iButton) const {
 	return !(buttons & SDL_BUTTON(iButton)) && (oldButtons & SDL_BUTTON(iButton));
 }
 
-bool InputManager::MouseStillUp(int iButton){
-	return false; !(buttons & SDL_BUTTON(iButton)) && !(oldButtons & SDL_BUTTON(iButton));
+bool InputManager::MouseStillUp(const int iButton) const {
+	return !(buttons & SDL_BUTTON(iButton)) && !(oldButtons & SDL_BUTTON(iButton));
 }
 
-bool InputManager::MouseDown(int iButton){
+bool InputManager::MouseDown(const int iButton) const {
 	return (buttons & SDL_BUTTON(iButton)) && !(oldButtons & SDL_BUTTON(iButton));
 }
 
-bool InputManager::MouseStillDown(int iButton){
+bool InputManager::MouseStillDown(const int iButton) const {
 	return (buttons & SDL_BUTTON(iButton)) && (oldButtons & SDL_BUTTON(iButton));
 }
