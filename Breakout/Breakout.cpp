@@ -7,6 +7,7 @@
 #include "Player.h"
 #include <vector>
 #include "BrickLayer.h"
+#include "Ball.h"
 
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
@@ -99,6 +100,8 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT,renderer);
 	std::vector<Block>* map = BL.GetMap();
 
+	Ball ball{ Vector2{SCREEN_WIDTH / 2,500.0f},Vector2{1.0f,0.5f}, 10.0f,127,127,127,renderer };
+
 	InputManager& inputManager = InputManager::GetInstance();
 
 	/*GameLoop*/
@@ -116,9 +119,14 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 		RenderMap(renderer,map);
 
+		ball.CheckCollision(SCREEN_HEIGHT,SCREEN_WIDTH,map);
+		ball.MoveBall();
+		SDL_RenderCopy(renderer, ball.GetTexture(), nullptr, ball.GetRect());
+
 		coords.x = static_cast<int>(player.GetPos());
 		coords.y = static_cast<int>(y);
 		SDL_RenderCopy(renderer, drawable, nullptr, &coords);
+
 		SDL_RenderPresent(renderer);
 		SDL_RenderClear(renderer);
 	}

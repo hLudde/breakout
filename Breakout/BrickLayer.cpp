@@ -4,7 +4,7 @@
 void BrickLayer::CreateMap(const int windowWidth, const int windowHeight, SDL_Renderer* renderer)
 {
 	const int INIT_OFFSET_H = 100;
-	const int INIT_OFFSET_W = 0;
+	const int INIT_OFFSET_W = 1;
 
 	const int bWidth = windowWidth/10;		//Width of the blocks
 	const int bHeight = windowHeight/3/4;	//Height of the blocks
