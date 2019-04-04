@@ -5,6 +5,8 @@
 #include "Vector2.h"
 #include "Block.h"
 #include "Player.h"
+#include <vector>
+#include "BrickLayer.h"
 
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
@@ -17,6 +19,7 @@ const int SCREEN_WIDTH = 750+50;
 bool Init(SDL_Window* &window, SDL_Surface* &screenSurface);
 void Close(SDL_Window* &window);
 int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface);
+void RenderMap(SDL_Renderer* renderer, std::vector<Block>* map);
 
 /*main*/
 int main(int argc, char* argv[]) {
@@ -71,7 +74,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 255);
 	SDL_RenderClear(renderer);
 
-	Player player = Player(Vector2(0, 0), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F	);
+	Player player = Player(Vector2(0, 0), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F,renderer	);
 	SDL_Surface* surface = player.GetSurface();//Block(Vector2(0 , SCREEN_HEIGHT - 150), PLAYER_HEIGHT, PLAYER_WIDTH, 255, 0,0).GetSurface();
 	if (surface == nullptr) {
 		std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
@@ -92,6 +95,10 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	SDL_FreeSurface(surface);
 	/*renderer init STOP*/
 
+	BrickLayer BL;
+	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT,renderer);
+	std::vector<Block>* map = BL.GetMap();
+
 	InputManager& inputManager = InputManager::GetInstance();
 
 	/*GameLoop*/
@@ -106,6 +113,9 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		}
 
 		/*renderer*/
+
+		RenderMap(renderer,map);
+
 		coords.x = static_cast<int>(player.GetPos());
 		coords.y = static_cast<int>(y);
 		SDL_RenderCopy(renderer, drawable, nullptr, &coords);
@@ -120,4 +130,19 @@ void Close(SDL_Window* &window) {
 	SDL_Quit();
 	exit(0);
 	return;
+}
+
+void RenderMap(struct SDL_Renderer* renderer, std::vector<Block>* map)
+{
+
+	for (int i=0;i < map->size();i++)
+	{
+		Block& block = map->at(i);
+
+		if (block.GetTexture() == nullptr)
+			block.CreateTexture(renderer);
+
+		SDL_Rect rect { int(block.GetPos()->x),int(block.GetPos()->y),block.GetWidth(),block.GetHeight() };
+		SDL_RenderCopy(renderer, block.GetTexture(), nullptr, &rect);
+	}
 }
