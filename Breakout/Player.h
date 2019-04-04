@@ -2,7 +2,7 @@
 
 class Player {
 public:
-	Player(Vector2 pos, int h, int w, Uint8 r, Uint8 g, Uint8 b);
+	Player(Vector2 pos, int h, int w, Uint8 r, Uint8 g, Uint8 b,SDL_Renderer* renderer);
 	void MovePlayer();
 	float GetPos();
 	SDL_Surface* GetSurface() const;
