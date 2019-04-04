@@ -15,14 +15,18 @@ public:
 	SDL_Texture* GetTexture() const { return texture; }
 	SDL_Rect* GetRect() { return &rect; }
 
-	void CheckCollision(int winHeight, int winWidth, std::vector<Block>* map);
+	void CheckCollision(int winHeight, int winWidth, std::vector<Block>* map, Block* player);
 	void MoveBall();
+	bool IsColliding(Block* block) const;
 private:
 	Vector2 dir;
 	Vector2 pos;
 	float speed;
 	float radius;
+	float diameter;
 	SDL_Rect rect{};
 	SDL_Texture* texture;
 	Timer& timer = Timer::GetInstance();
+
+	void ChangeDir(Block* block);
 };

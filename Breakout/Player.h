@@ -6,6 +6,7 @@ public:
 	void MovePlayer();
 	float GetPos();
 	SDL_Surface* GetSurface() const;
+	Block GetBlock() const { return player; }
 private:
 	float playerSpeed = .5f;
 	Timer& timer = Timer::GetInstance();

@@ -119,7 +119,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 		RenderMap(renderer,map);
 
-		ball.CheckCollision(SCREEN_HEIGHT,SCREEN_WIDTH,map);
+		ball.CheckCollision(SCREEN_HEIGHT,SCREEN_WIDTH,map,&player.GetBlock());
 		ball.MoveBall();
 		SDL_RenderCopy(renderer, ball.GetTexture(), nullptr, ball.GetRect());
 
