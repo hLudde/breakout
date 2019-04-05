@@ -8,6 +8,7 @@
 #include <vector>
 #include "BrickLayer.h"
 #include "Ball.h"
+#include "Renderer.h"
 
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
@@ -65,16 +66,15 @@ bool Init(SDL_Window* &window, SDL_Surface* &screenSurface) {
 /*renderer init and gameLoop*/
 int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	//Renderer& renderer = Renderer::Init(window);
 
-	if (renderer == nullptr) {
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	
+	/*if (renderer == nullptr) {
 		std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
 		Close(window);
 		return EXIT_FAILURE;
-	}
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 255);
-	SDL_RenderClear(renderer);
-
+	}*/
 	Player player = Player(Vector2(0, SCREEN_HEIGHT-150), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F,renderer, screenSurface->w);
 	SDL_Surface* surface = player.GetSurface();//Block(Vector2(0 , SCREEN_HEIGHT - 150), PLAYER_HEIGHT, PLAYER_WIDTH, 255, 0,0).GetSurface();
 	if (surface == nullptr) {
@@ -111,12 +111,12 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		timer.UpdateDeltaTime();
 		inputManager.Update();
 		player.MovePlayer();
-
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
+			return EXIT_SUCCESS;
 		}
-		if (ball.IsDead())
-			Close(window);
+		/*if (ball.IsDead())
+			Close(window);*/
 
 		/*renderer*/
 
@@ -129,17 +129,16 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		coords.x = static_cast<int>(player.GetPos());
 		coords.y = static_cast<int>(y);
 		SDL_RenderCopy(renderer, drawable, nullptr, &coords);
-
 		SDL_RenderPresent(renderer);
 		SDL_RenderClear(renderer);
 	}
+	return EXIT_SUCCESS;
 }
 
 /*cleaner and exiting function*/
 void Close(SDL_Window* &window) {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-	exit(0);
 	return;
 }
 
