@@ -72,6 +72,7 @@ void Ball::WallCollide(int winWidth, int winHeight)
 		std::cout << "Colliding; Up" << std::endl;
 	}
 	else if (pos.y + diameter >= winHeight) {
+		isDead = true;
 		dir.y = -abs(dir.y);
 		std::cout << "Colliding; Down" << std::endl;
 	}

@@ -13,17 +13,17 @@ SDL_Surface* Player::GetSurface() const {
 }
 
 void Player::MovePlayer() {
-	float &x = player.GetPos()->x;
+	Vector2* pos = player.GetPos();
 	if (inputManager.KeyStillDown(SDL_SCANCODE_LEFT)) {
-		x -= playerSpeed * static_cast<float>(timer.GetDeltaTime());
-		if (x <= 0) {
-			x = 0;
+		pos->x -= playerSpeed * static_cast<float>(timer.GetDeltaTime());
+		if (pos->x <= 0) {
+			pos->x = 0;
 		}
 	}
 	if (inputManager.KeyStillDown(SDL_SCANCODE_RIGHT)) {
-		x += playerSpeed * static_cast<float>(timer.GetDeltaTime());
-		if (x + player.GetWidth() >= w) {
-			x = static_cast<float>(w - player.GetWidth());
+		pos->x += playerSpeed * static_cast<float>(timer.GetDeltaTime());
+		if (pos->x + player.GetWidth() >= w) {
+			pos->x = static_cast<float>(w - player.GetWidth());
 		}
 	}
 }

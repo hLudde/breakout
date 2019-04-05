@@ -18,6 +18,7 @@ public:
 	void CheckCollision(int winHeight, int winWidth, std::vector<Block>* map, Block* player);
 	void MoveBall();
 	bool IsColliding(Block* block) const;
+	bool IsDead() const { return isDead; }
 private:
 	Vector2 dir;
 	Vector2 pos;
@@ -28,6 +29,8 @@ private:
 	SDL_Rect rect{};
 	SDL_Texture* texture;
 	Timer& timer = Timer::GetInstance();
+
+	bool isDead = false;
 
 	void ChangeDir(Block* block);
 	void WallCollide(int winWidth, int winHeight);
