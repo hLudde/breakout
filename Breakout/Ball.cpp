@@ -31,6 +31,7 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 		{
 			std::cout << "Colliding!" << std::endl;
 			ChangeDir(&map->at(i));
+			map->erase(map->begin() + i);
 			break;
 		}
 	}
