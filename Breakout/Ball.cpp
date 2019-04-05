@@ -7,8 +7,8 @@ Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b, SD
 	speed = 0.5f;
 	diameter = radius * 2;
 
-	rect.w = diameter;
-	rect.h = diameter;
+	rect.w = static_cast<int>(diameter);
+	rect.h = static_cast<int>(diameter);
 
 	auto surface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
 	SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, r, g, b));
@@ -20,10 +20,7 @@ Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b, SD
 
 void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<Block>* map, Block* player)
 {
-	if (pos.x < 0 || pos.x + diameter > winWidth)
-		dir.x = -dir.x;
-	if (pos.y < 0 || pos.y + diameter> winHeight)
-		dir.y = -dir.y;
+	WallCollide(winWidth, winHeight);
 
 	for (int i=0; i < map->size();i++)
 	{
@@ -46,7 +43,7 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 
 void Ball::MoveBall()
 {
-	const float distance = speed * timer.GetDeltaTime();
+	const float distance = speed * static_cast<float>(timer.GetDeltaTime());
 
 	pos.x += dir.x * distance;
 	pos.y += dir.y * distance;
@@ -57,10 +54,10 @@ void Ball::MoveBall()
 
 bool Ball::IsColliding(Block* block) const
 {
-	int bx1 = block->GetPos()->x;
-	int bx2 = bx1 + block->GetWidth();
-	int by1 = block->GetPos()->y;
-	int by2 = by1 + block->GetHeight();
+	const int bx1 = static_cast<int>(block->GetPos()->x);
+	const int bx2 = bx1 + block->GetWidth();
+	const int by1 = static_cast<int>(block->GetPos()->y);
+	const int by2 = by1 + block->GetHeight();
 
 	if ((pos.x > bx1 && pos.x < bx2) || (pos.x + diameter > bx1 && pos.x + diameter < bx2))
 		if ((pos.y > by1 && pos.y < by2) || (pos.y + diameter > by1 && pos.y + diameter < by2))
@@ -77,4 +74,22 @@ void Ball::ChangeDir(Block* block)
 		dir.x = -dir.x;
 	else
 		dir.y = -dir.y;
+}
+
+void Ball::WallCollide(int winWidth, int winHeight)
+{
+	//if (pos.x < 0 || pos.x + diameter > winWidth)
+	//	dir.x = -dir.x;
+	//if (pos.y < 0 || pos.y + diameter> winHeight)
+	//	dir.y = -dir.y;
+
+	if (pos.x <= 0)
+		dir.x = abs(dir.x);
+	else if (pos.x + diameter >= winWidth)
+		dir.x = -abs(dir.x);
+
+	if (pos.y <= 0)
+		dir.y = abs(dir.y);
+	else if (pos.y + diameter >= winHeight)
+		dir.y = -abs(dir.y);
 }

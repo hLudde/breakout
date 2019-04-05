@@ -29,4 +29,5 @@ private:
 	Timer& timer = Timer::GetInstance();
 
 	void ChangeDir(Block* block);
+	void WallCollide(int winWidth, int winHeight);
 };
