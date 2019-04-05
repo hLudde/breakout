@@ -21,6 +21,7 @@ public:
 private:
 	Vector2 dir;
 	Vector2 pos;
+	Vector2 oldPos;
 	float speed;
 	float radius;
 	float diameter;
@@ -30,4 +31,8 @@ private:
 
 	void ChangeDir(Block* block);
 	void WallCollide(int winWidth, int winHeight);
+	bool CollidedFromLeft(Block* block) const;
+	bool CollidedFromRight(Block* block) const;
+	bool CollidedFromUp(Block* block) const;
+	bool CollidedFromDown(Block* block) const;
 };
