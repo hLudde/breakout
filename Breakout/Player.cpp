@@ -23,7 +23,7 @@ void Player::MovePlayer() {
 	if (inputManager.KeyStillDown(SDL_SCANCODE_RIGHT)) {
 		x += playerSpeed * static_cast<float>(timer.GetDeltaTime());
 		if (x + player.GetWidth() >= w) {
-			x = w - player.GetWidth();
+			x = static_cast<float>(w - player.GetWidth());
 		}
 	}
 }
