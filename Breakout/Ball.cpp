@@ -49,7 +49,7 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 
 	if (IsColliding(player))
 	{
-		ChangeDir(player);
+		PlayerCollide(player);
 	}
 
 	dir = dir.Normalize();
@@ -77,6 +77,17 @@ void Ball::WallCollide(int winWidth, int winHeight)
 		std::cout << "Colliding; Down" << std::endl;
 	}
 
+}
+
+void Ball::PlayerCollide(Block* block)
+{
+	const Vector2 bCenter = pos + Vector2{ radius,radius };
+	const Vector2 pCenter = *block->GetPos() + Vector2{ static_cast<float>(block->GetWidth()) / 2,static_cast<float>(block->GetHeight()) / 2 };
+
+	Vector2 newDir = bCenter - pCenter;
+	newDir = newDir.Normalize();
+
+	dir = newDir;
 }
 
 bool Ball::IsColliding(Block* block) const
