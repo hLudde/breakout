@@ -34,6 +34,8 @@ private:
 
 	void ChangeDir(Block* block);
 	void WallCollide(int winWidth, int winHeight);
+	void PlayerCollide(Block* block);
+
 	bool CollidedFromLeft(Block* block) const;
 	bool CollidedFromRight(Block* block) const;
 	bool CollidedFromUp(Block* block) const;
