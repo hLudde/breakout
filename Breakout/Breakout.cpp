@@ -75,7 +75,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 255);
 	SDL_RenderClear(renderer);
 
-	Player player = Player(Vector2(0, 0), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F,renderer	);
+	Player player = Player(Vector2(0, 0), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F,renderer, screenSurface->w);
 	SDL_Surface* surface = player.GetSurface();//Block(Vector2(0 , SCREEN_HEIGHT - 150), PLAYER_HEIGHT, PLAYER_WIDTH, 255, 0,0).GetSurface();
 	if (surface == nullptr) {
 		std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
@@ -100,17 +100,18 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT,renderer);
 	std::vector<Block>* map = BL.GetMap();
 
-	Ball ball{ Vector2{SCREEN_WIDTH / 2,500.0f},Vector2{1.0f,0.5f}, 10.0f,127,127,127,renderer };
+	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2),500.0f},Vector2{1.0f,0.5f}, 10.0f,127,127,127,renderer };
 
 	InputManager& inputManager = InputManager::GetInstance();
 
 	/*GameLoop*/
 	while (true) {
 		/*Input manager*/
+
 		timer.UpdateDeltaTime();
 		inputManager.Update();
-		//std::cout << timer.GetDeltaTime() << std::endl;
 		player.MovePlayer();
+
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
 		}
