@@ -10,6 +10,7 @@
 #include "Ball.h"
 #include "Renderer.h"
 
+#define FPS_INTERVAL 1.0 //seconds.
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
 
@@ -65,6 +66,9 @@ bool Init(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 /*renderer init and gameLoop*/
 int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
+
+	Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
+	Uint32 fps_frames = 0; //frames passed since the last recorded fps.
 
 	//Renderer& renderer = Renderer::Init(window);
 
@@ -131,6 +135,16 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		SDL_RenderCopy(renderer, drawable, nullptr, &coords);
 		SDL_RenderPresent(renderer);
 		SDL_RenderClear(renderer);
+
+
+		fps_frames++;
+		if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL * 1000)
+		{
+			fps_lasttime = SDL_GetTicks();
+			printf("FPS: %d\n", fps_frames);
+			fps_frames = 0;
+		}
+
 	}
 	return EXIT_SUCCESS;
 }
