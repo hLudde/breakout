@@ -72,10 +72,10 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	
 	/*if (renderer == nullptr) {
 		std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
-		Close(window);
+	a	Close(window);
 		return EXIT_FAILURE;
 	}*/
-	Player player = Player(Vector2(0, SCREEN_HEIGHT-150), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F,renderer, screenSurface->w);
+	Player player = Player(Vector2((SCREEN_WIDTH-PLAYER_WIDTH)/2, SCREEN_HEIGHT-150), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F,renderer, screenSurface->w);
 	SDL_Surface* surface = player.GetSurface();//Block(Vector2(0 , SCREEN_HEIGHT - 150), PLAYER_HEIGHT, PLAYER_WIDTH, 255, 0,0).GetSurface();
 	if (surface == nullptr) {
 		std::cerr << "Failed to create surface: " << SDL_GetError() << std::endl;
