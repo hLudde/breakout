@@ -5,11 +5,11 @@
 class BrickLayer
 {
 public:
-	BrickLayer() :map(std::vector<Block>()) {  }
+	BrickLayer() = default;
 
 	void CreateMap(int windowWidth, int windowHeight, SDL_Renderer* renderer);
 
-	std::vector<Block>* GetMap() { return &map; }
+	std::vector<std::vector<Block>>* GetMap() { return &map; }
 private:
-	std::vector<Block> map;
+	std::vector<std::vector<Block>> map;
 };

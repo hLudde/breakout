@@ -32,37 +32,46 @@ void Ball::MoveBall()
 	rect.y = static_cast<int>(pos.y);
 }
 
-void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<Block>* map, Block* player)
+void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<std::vector<Block>>* map, Block* player)
 {
 	WallCollide(winWidth, winHeight);
 
-	if (static_cast<int>(pos.y) < winHeight / 2) {
-		if (static_cast<int>(pos.x) < winWidth / 2)
-			for (int i = 0; i < static_cast<int>(map->size()) / 2; i++)
+	if (static_cast<int>(pos.y) < winHeight/2) 
+	{
+		if (static_cast<int>(pos.x) + diameter < winWidth / 2) {
+			for (int i = 0; i < map->size() / 2; i++)
 			{
-				if (IsColliding(&map->at(i)))
+				std::vector<Block>* curVec = &map->at(i);
+
+				for (int j = 0; j < curVec->size(); j++)
 				{
-					std::cout << "Colliding; Block" << std::endl;
-					ChangeDir(&map->at(i));
-					map->erase(map->begin() + i);
+					if (IsColliding(&curVec->at(j)))
+					{
+						ChangeDir(&curVec->at(j));
+						curVec->erase(curVec->begin() + j);
+					}
 				}
 			}
-		else if (static_cast<int>(pos.x) >= winWidth / 2)
-			for (int i = map->size() / 2; i < static_cast<int>(map->size()); i++)
+		}
+		if (static_cast<int>(pos.x) + diameter >= winWidth / 2) {
+			for (int i = map->size() / 2; i < map->size(); i++)
 			{
-				if (IsColliding(&map->at(i)))
+				std::vector<Block>* curVec = &map->at(i);
+
+				for (int j = 0; j < curVec->size(); j++)
 				{
-					std::cout << "Colliding; Block" << std::endl;
-					ChangeDir(&map->at(i));
-					map->erase(map->begin() + i);
+					if (IsColliding(&curVec->at(j)))
+					{
+						ChangeDir(&curVec->at(j));
+						curVec->erase(curVec->begin() + j);
+					}
 				}
 			}
+		}
 	}
 
-	if (pos.y >= 600 && IsColliding(player))
-	{
+	if (pos.y > winHeight/2 && IsColliding(player))
 		PlayerCollide(player);
-	}
 
 	dir = dir.Normalize();
 }

@@ -22,7 +22,7 @@ const int SCREEN_WIDTH = 750+50;
 bool Init(SDL_Window* &window, SDL_Surface* &screenSurface);
 void Close(SDL_Window* &window);
 int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface);
-void RenderMap(SDL_Renderer* renderer, std::vector<Block>* map);
+void RenderMap(SDL_Renderer* renderer, std::vector<std::vector<Block>>* map);
 
 /*main*/
 int main(int argc, char* argv[]) {
@@ -102,7 +102,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 	BrickLayer BL;
 	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT,renderer);
-	std::vector<Block>* map = BL.GetMap();
+	std::vector<std::vector<Block>>* map = BL.GetMap();
 
 	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2),500.0f},Vector2{1.0f,0.5f}, 10.0f,127,127,127,renderer };
 
@@ -156,14 +156,13 @@ void Close(SDL_Window* &window) {
 	return;
 }
 
-void RenderMap(struct SDL_Renderer* renderer, std::vector<Block>* map)
+void RenderMap(struct SDL_Renderer* renderer, std::vector<std::vector<Block>>* map)
 {
 
-	for (int i=0;i < map->size();i++)
-	{
-		Block& block = map->at(i);
-
-		if (block.GetTexture() == nullptr)
+	for (auto& i : *map)
+		for (auto& block : i)
+		{
+			if (block.GetTexture() == nullptr)
 			block.CreateTexture(renderer);
 
 		SDL_Rect rect { int(block.GetPos()->x),int(block.GetPos()->y),block.GetWidth(),block.GetHeight() };
