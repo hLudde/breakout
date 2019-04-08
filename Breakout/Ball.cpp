@@ -36,21 +36,30 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 {
 	WallCollide(winWidth, winHeight);
 
-	for (int i = 0; i < map->size(); i++)
-	{
-		if ((*map->at(i).GetPos() - pos).Length() < 100) {
-
-			if (IsColliding(&map->at(i)))
+	if (static_cast<int>(pos.y) < winHeight / 2) {
+		if (static_cast<int>(pos.x) < winWidth / 2)
+			for (int i = 0; i < static_cast<int>(map->size()) / 2; i++)
 			{
-				std::cout << "Colliding; Block" << std::endl;
-				ChangeDir(&map->at(i));
-				map->erase(map->begin() + i);
-				break;
+				if (IsColliding(&map->at(i)))
+				{
+					std::cout << "Colliding; Block" << std::endl;
+					ChangeDir(&map->at(i));
+					map->erase(map->begin() + i);
+				}
 			}
-		}
+		else if (static_cast<int>(pos.x) >= winWidth / 2)
+			for (int i = map->size() / 2; i < static_cast<int>(map->size()); i++)
+			{
+				if (IsColliding(&map->at(i)))
+				{
+					std::cout << "Colliding; Block" << std::endl;
+					ChangeDir(&map->at(i));
+					map->erase(map->begin() + i);
+				}
+			}
 	}
 
-	if (IsColliding(player))
+	if (pos.y >= 600 && IsColliding(player))
 	{
 		PlayerCollide(player);
 	}
@@ -58,26 +67,22 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 	dir = dir.Normalize();
 }
 
-void Ball::WallCollide(int winWidth, int winHeight)
+void Ball::WallCollide(const int winWidth, const int winHeight)
 {
 	if (pos.x <= 0) {
 		dir.x = abs(dir.x);
-		std::cout << "Colliding; Left" << std::endl;
 	}
 
 	else if (pos.x + diameter >= winWidth) {
 		dir.x = -abs(dir.x);
-		std::cout << "Colliding; Right" << std::endl;
 	}
 
 	if (pos.y <= 0) {
 		dir.y = abs(dir.y);
-		std::cout << "Colliding; Up" << std::endl;
 	}
 	else if (pos.y + diameter >= winHeight) {
 		isDead = true;
 		dir.y = -abs(dir.y);
-		std::cout << "Colliding; Down" << std::endl;
 	}
 }
 

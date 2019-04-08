@@ -53,5 +53,4 @@ Vector2 Vector2::Normalize() const
 Vector2 Vector2::Negate() const
 {
 	return *this * -1;
-
 }
