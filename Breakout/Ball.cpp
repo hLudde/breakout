@@ -13,12 +13,6 @@ Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b): d
 	rect.h = static_cast<int>(diameter);
 
 	Renderer::GetInstance().CreateRectangle(&rect, r,g,b, &this->pos);
-	/*auto surface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
-	SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, r, g, b));
-	
-	texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-	SDL_FreeSurface(surface);*/
 }
 
 void Ball::MoveBall()

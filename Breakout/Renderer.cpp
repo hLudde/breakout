@@ -4,7 +4,6 @@
 Renderer::Renderer(SDL_Window* &window) {
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 255);
-	//SDL_RenderDrawRect(renderer, new SDL_Rect{ 0,0, 100, 100});
 	SDL_RenderPresent(renderer);
 	SDL_RenderClear(renderer);
 	printf("Created an instance of renderer!\n");
@@ -41,7 +40,6 @@ void Renderer::DeleteRectangle(int id) {
 }
 
 void Renderer::Render() {
-	//printf("%llu\n", textures.size());
 	SDL_Rect rect{};
 	for(int i = 0; static_cast<int>(textures.size()) > i; i++) {
 		rect.x = static_cast<int>(positions.at(i)->x);

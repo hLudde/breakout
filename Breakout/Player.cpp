@@ -8,10 +8,6 @@ Player::Player(const Vector2 pos, const int h, const int w, const Uint8 r, const
 	player = new Block{ pos, h, w, r, g, b};
 }
 
-SDL_Surface* Player::GetSurface() const {
-	return player->GetSurface();
-}
-
 void Player::MovePlayer() {
 	Vector2* pos = player->GetPos();
 	if (inputManager.KeyStillDown(SDL_SCANCODE_LEFT)) {
