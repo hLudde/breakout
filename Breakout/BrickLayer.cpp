@@ -1,7 +1,7 @@
 ﻿#include "BrickLayer.h"
 #include "Block.h"
 
-void BrickLayer::CreateMap(const int windowWidth, const int windowHeight, SDL_Renderer* renderer)
+void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 {
 	const int INIT_OFFSET_H = 100;
 	const int INIT_OFFSET_W = 1;
@@ -13,7 +13,7 @@ void BrickLayer::CreateMap(const int windowWidth, const int windowHeight, SDL_Re
 		for(int j=0;j<4;j++)
 		{
 			Vector2 pos{ float(INIT_OFFSET_W + i * bWidth),float(INIT_OFFSET_H + j * bHeight) };
-			Block b{ pos,bHeight-2,bWidth-2,Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),renderer };
+			auto* b = new Block{ pos,bHeight-2,bWidth-2,Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),Uint8(55 + rand() % 200) };
 			map.push_back(b);
 		}
 }

@@ -1,8 +1,9 @@
 ﻿#include "Ball.h"
 #include "Timer.h"
+#include "Renderer.h"
 #include <iostream>
 
-Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b, SDL_Renderer* renderer): dir(dir), pos(pos), radius(radius)
+Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b): dir(dir), pos(pos), radius(radius)
 {
 	speed = 0.5f;
 	diameter = radius * 2;
@@ -11,12 +12,13 @@ Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b, SD
 	rect.w = static_cast<int>(diameter);
 	rect.h = static_cast<int>(diameter);
 
-	auto surface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
+	Renderer::GetInstance().CreateRectangle(&rect, r,g,b, &this->pos);
+	/*auto surface = SDL_CreateRGBSurface(0, rect.w, rect.h, 32, 0, 0, 0, 0);
 	SDL_FillRect(surface, &rect, SDL_MapRGB(surface->format, r, g, b));
 	
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-	SDL_FreeSurface(surface);
+	SDL_FreeSurface(surface);*/
 }
 
 void Ball::MoveBall()
@@ -32,21 +34,21 @@ void Ball::MoveBall()
 	rect.y = static_cast<int>(pos.y);
 }
 
-void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<Block>* map, Block* player)
+void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<Block*>* map, Block* player)
 {
 	WallCollide(winWidth, winHeight);
 
 	for (int i = 0; i < map->size(); i++)
 	{
-		if ((*map->at(i).GetPos() - pos).Length() < 100) {
-
-			if (IsColliding(&map->at(i)))
-			{
-				std::cout << "Colliding; Block" << std::endl;
-				ChangeDir(&map->at(i));
-				map->erase(map->begin() + i);
-				break;
-			}
+		if (IsColliding(map->at(i)))
+		{
+			std::cout << "Colliding; Block" << std::endl;
+			ChangeDir(map->at(i));
+			int id = map->at(i)->GetRendererID();
+			Renderer::GetInstance().DeleteRectangle(id);
+			printf("%d\n",map->at(i)->GetRendererID());
+			map->erase(map->begin() + i);
+			break;
 		}
 	}
 

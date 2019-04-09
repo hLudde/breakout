@@ -6,7 +6,7 @@
 class Ball
 {
 public:
-	Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b, SDL_Renderer* renderer);
+	Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b);
 
 	float GetSpeed() const { return speed; }
 	float GetRadius() const { return radius; }
@@ -15,7 +15,7 @@ public:
 	SDL_Texture* GetTexture() const { return texture; }
 	SDL_Rect* GetRect() { return &rect; }
 
-	void CheckCollision(int winHeight, int winWidth, std::vector<Block>* map, Block* player);
+	void CheckCollision(const int winHeight, const int winWidth, std::vector<Block*>* map, Block* player);
 	void MoveBall();
 	bool IsColliding(Block* block) const;
 	bool IsDead() const { return isDead; }

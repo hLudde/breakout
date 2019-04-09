@@ -3,17 +3,17 @@
 #include "Timer.h"
 #include "Block.h"
 #include "Player.h"
-Player::Player(const Vector2 pos, const int h, const int w, const Uint8 r, const Uint8 g, const Uint8 b, SDL_Renderer* renderer, const int screenWidth): w(screenWidth)
+Player::Player(const Vector2 pos, const int h, const int w, const Uint8 r, const Uint8 g, const Uint8 b, const int screenWidth): w(screenWidth)
 {
-	player = Block{ pos, h, w, r, g, b,renderer };
+	player = new Block{ pos, h, w, r, g, b};
 }
 
 SDL_Surface* Player::GetSurface() const {
-	return player.GetSurface();
+	return player->GetSurface();
 }
 
 void Player::MovePlayer() {
-	Vector2* pos = player.GetPos();
+	Vector2* pos = player->GetPos();
 	if (inputManager.KeyStillDown(SDL_SCANCODE_LEFT)) {
 		pos->x -= playerSpeed * static_cast<float>(timer.GetDeltaTime());
 		if (pos->x <= 0) {
@@ -22,12 +22,12 @@ void Player::MovePlayer() {
 	}
 	if (inputManager.KeyStillDown(SDL_SCANCODE_RIGHT)) {
 		pos->x += playerSpeed * static_cast<float>(timer.GetDeltaTime());
-		if (pos->x + player.GetWidth() >= w) {
-			pos->x = static_cast<float>(w - player.GetWidth());
+		if (pos->x + player->GetWidth() >= w) {
+			pos->x = static_cast<float>(w - player->GetWidth());
 		}
 	}
 }
 
 float Player::GetPos(){
-	return player.GetPos()->x;
+	return player->GetPos()->x;
 }
