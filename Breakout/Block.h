@@ -7,7 +7,7 @@ public:
 	explicit Block() = default;
 	explicit Block(Vector2 pos, SDL_Renderer* renderer);
 
-	explicit Block(Vector2 pos, int h, int w, Uint8 r, Uint8 g, Uint8 b, SDL_Renderer* renderer);
+	explicit Block(Vector2 pos, int h, int w, Uint8 r, Uint8 g, Uint8 b);
 
 	/**
 	 *Should not be used. use GetTexture() instead.
@@ -18,13 +18,14 @@ public:
 	Vector2* GetPos() { return &pos; }
 	int GetHeight() const { return height; }
 	int GetWidth() const { return width; }
-
+	int GetRendererID() { return rendererID;  }
 	void CreateTexture(SDL_Renderer* renderer);
 
 private:
 	Vector2 pos;
-	SDL_Rect rect{};
+	SDL_Rect* rect;
 	int height, width;
+	int rendererID;
 	SDL_Surface* surface;
 	SDL_Texture* texture = nullptr;
 };
