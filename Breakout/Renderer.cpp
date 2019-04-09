@@ -1,22 +1,55 @@
 ﻿#include "Renderer.h"
+#include "Vector2.h"
+
 Renderer::Renderer(SDL_Window* &window) {
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawColor(renderer, 0x23, 0x7C, 0x42, 255);
-	SDL_RenderDrawRect(renderer, new SDL_Rect{ 0,0, 100, 100});
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 255);
+	//SDL_RenderDrawRect(renderer, new SDL_Rect{ 0,0, 100, 100});
 	SDL_RenderPresent(renderer);
 	SDL_RenderClear(renderer);
+	printf("Created an instance of renderer!\n");
 }
 
-void Renderer::CreateRectangle(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b) {
-	SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-	SDL_FillRect(surface, new SDL_Rect{ x, y, width, height }, SDL_MapRGB(surface->format, r, g, b));
+int Renderer::CreateRectangle(SDL_Rect* rectangle, Uint8 r, Uint8 g, Uint8 b, Vector2* pos) {
+	const int rendererID = renderIDCounter++;
+	SDL_Surface* surface = SDL_CreateRGBSurface(0, rectangle->w, rectangle->h, 32, 0, 0, 0, 0);
+	SDL_FillRect(surface, nullptr/*new SDL_Rect{ rectangle->x, rectangle->y, rectangle->w, rectangle->h }*/, SDL_MapRGB(surface->format, r, g, b));
+	positions.push_back(pos);
+	rectangles.push_back(rectangle);
 	textures.push_back(SDL_CreateTextureFromSurface(renderer, surface));
+	renderObjects.push_back((rendererID));
 	SDL_FreeSurface(surface);
+	return rendererID;
+}
+
+void Renderer::DeleteRectangle(int id) {
+	int position = 0;
+	int initialized = false;
+	for(unsigned int i = 0; renderObjects.size()>i; i++) {
+		if(renderObjects.at(i)==id) {
+			position = i;
+			initialized = true;
+			printf("Found %d!", position);
+		}
+	}
+	if(!initialized) {
+		throw "RendererID requested to delete do not exist!";
+	}
+	renderObjects.erase(renderObjects.begin() + position);
+	positions.erase(positions.begin() + position);
+	rectangles.erase(rectangles.begin() + position);
+	textures.erase(textures.begin() + position);
 }
 
 void Renderer::Render() {
-	for (SDL_Texture* texture : textures) {
-		SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+	//printf("%llu\n", textures.size());
+	SDL_Rect rect{};
+	for(int i = 0; static_cast<int>(textures.size()) > i; i++) {
+		rect.x = static_cast<int>(positions.at(i)->x);
+		rect.y = static_cast<int>(positions.at(i)->y);
+		rect.w = rectangles.at(i)->w;
+		rect.h = rectangles.at(i)->h;
+		SDL_RenderCopy(renderer, textures.at(i), nullptr, &rect);
 	}
 	SDL_RenderPresent(renderer);
 	SDL_RenderClear(renderer);

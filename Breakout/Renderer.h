@@ -2,11 +2,17 @@
 #include <vector>
 #include <SDL.h>
 
+class Vector2;
+
 class Renderer {
 private:
+	int renderIDCounter = 0;
+	std::vector<int>renderObjects;
 	explicit Renderer(SDL_Window* &window);
 	std::vector<SDL_Texture*> textures;
+	std::vector<SDL_Rect*> rectangles;
 	SDL_Renderer* renderer;
+	std::vector<Vector2*> positions;
 public:
 
 	static Renderer& GetInstance() {
@@ -24,6 +30,7 @@ public:
 	static Renderer& Init(SDL_Window* &window) { return Renderer::InstanceImp(window); };
 
 
-	void CreateRectangle(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b);
+	int CreateRectangle(SDL_Rect* rectangle, Uint8 r, Uint8 g, Uint8 b, Vector2* pos);
+	void DeleteRectangle(int id);
 	void Render();
 };
