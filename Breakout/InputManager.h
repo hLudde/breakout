@@ -36,11 +36,11 @@ private:
 		keys = SDL_GetKeyboardState(&keyCount);
 		buttons = SDL_GetRelativeMouseState(&mouseX, &mouseY);
 		oldKeys = std::unique_ptr<Uint8>(new Uint8[keyCount]);
-		std::cout << "I am alive!" << std::endl;
+		std::cout << "Created an instance of InputManager!" << std::endl;
 	};
 	
 	~InputManager() {
-		std::cout << "You killed me ;-;" << std::endl;
+		std::cout << "Killed InputManager!" << std::endl;
 	};
 	
 };
