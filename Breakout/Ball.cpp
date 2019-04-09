@@ -32,39 +32,34 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<s
 {
 	WallCollide(winWidth, winHeight);
 
+	const auto mapCheck = [this](std::vector<Block*>* curVec)
+	{
+		for (int i = 0; i < curVec->size(); i++)
+		{
+			if (IsColliding(curVec->at(i)))
+			{
+				ChangeDir(curVec->at(i));
+				int id = curVec->at(i)->GetRendererID();
+				Renderer::GetInstance().DeleteRectangle(id);
+				curVec->erase(curVec->begin() + i);
+			}
+		}
+	};
+
 	if (static_cast<int>(pos.y) < winHeight/2) 
 	{
 		if (static_cast<int>(pos.x) + diameter < winWidth / 2) {
 			for (int i = 0; i < map->size() / 2; i++)
 			{
 				std::vector<Block*>* curVec = &map->at(i);
-
-				for (int j = 0; j < curVec->size(); j++)
-				{
-					if (IsColliding(curVec->at(j)))
-					{
-						ChangeDir(curVec->at(j));
-						int id = curVec->at(j)->GetRendererID();
-						Renderer::GetInstance().DeleteRectangle(id);
-						curVec->erase(curVec->begin() + j);
-					}
-				}
+				mapCheck(curVec);
 			}
 		}
 		if (static_cast<int>(pos.x) + diameter >= winWidth / 2) {
-			for (int i = map->size() / 2; i < map->size(); i++)
+			for (int i = map->size() / 2; i < static_cast<int>(map->size()); i++)
 			{
 				std::vector<Block*>* curVec = &map->at(i);
-				for (int j = 0; j < curVec->size(); j++)
-				{
-					if (IsColliding(curVec->at(j)))
-					{
-						ChangeDir(curVec->at(j));
-						int id = curVec->at(j)->GetRendererID();
-						Renderer::GetInstance().DeleteRectangle(id);
-						curVec->erase(curVec->begin() + j);
-					}
-				}
+				mapCheck(curVec);
 			}
 		}
 	}

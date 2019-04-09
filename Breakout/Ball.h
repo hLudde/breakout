@@ -12,7 +12,6 @@ public:
 	float GetRadius() const { return radius; }
 	Vector2 GetDir() const { return dir; }
 	Vector2 GetPos() const { return pos; }
-	SDL_Texture* GetTexture() const { return texture; }
 	SDL_Rect* GetRect() { return &rect; }
 
 	void CheckCollision(const int winHeight, const int winWidth, std::vector<std::vector<Block*>>* map, Block* player);
@@ -27,7 +26,6 @@ private:
 	float radius;
 	float diameter;
 	SDL_Rect rect{};
-	SDL_Texture* texture;
 	Timer& timer = Timer::GetInstance();
 
 	bool isDead = false;
