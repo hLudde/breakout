@@ -34,52 +34,69 @@ void Ball::MoveBall()
 	rect.y = static_cast<int>(pos.y);
 }
 
-void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<Block*>* map, Block* player)
+void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<std::vector<Block*>>* map, Block* player)
 {
 	WallCollide(winWidth, winHeight);
 
-	for (int i = 0; i < map->size(); i++)
+	if (static_cast<int>(pos.y) < winHeight/2) 
 	{
-		if (IsColliding(map->at(i)))
-		{
-			std::cout << "Colliding; Block" << std::endl;
-			ChangeDir(map->at(i));
-			int id = map->at(i)->GetRendererID();
-			Renderer::GetInstance().DeleteRectangle(id);
-			printf("%d\n",map->at(i)->GetRendererID());
-			map->erase(map->begin() + i);
-			break;
+		if (static_cast<int>(pos.x) + diameter < winWidth / 2) {
+			for (int i = 0; i < map->size() / 2; i++)
+			{
+				std::vector<Block*>* curVec = &map->at(i);
+
+				for (int j = 0; j < curVec->size(); j++)
+				{
+					if (IsColliding(curVec->at(j)))
+					{
+						ChangeDir(curVec->at(j));
+						int id = curVec->at(j)->GetRendererID();
+						Renderer::GetInstance().DeleteRectangle(id);
+						curVec->erase(curVec->begin() + j);
+					}
+				}
+			}
+		}
+		if (static_cast<int>(pos.x) + diameter >= winWidth / 2) {
+			for (int i = map->size() / 2; i < map->size(); i++)
+			{
+				std::vector<Block*>* curVec = &map->at(i);
+				for (int j = 0; j < curVec->size(); j++)
+				{
+					if (IsColliding(curVec->at(j)))
+					{
+						ChangeDir(curVec->at(j));
+						int id = curVec->at(j)->GetRendererID();
+						Renderer::GetInstance().DeleteRectangle(id);
+						curVec->erase(curVec->begin() + j);
+					}
+				}
+			}
 		}
 	}
 
-	if (IsColliding(player))
-	{
+	if (pos.y > winHeight/2 && IsColliding(player))
 		PlayerCollide(player);
-	}
 
 	dir = dir.Normalize();
 }
 
-void Ball::WallCollide(int winWidth, int winHeight)
+void Ball::WallCollide(const int winWidth, const int winHeight)
 {
 	if (pos.x <= 0) {
 		dir.x = abs(dir.x);
-		std::cout << "Colliding; Left" << std::endl;
 	}
 
 	else if (pos.x + diameter >= winWidth) {
 		dir.x = -abs(dir.x);
-		std::cout << "Colliding; Right" << std::endl;
 	}
 
 	if (pos.y <= 0) {
 		dir.y = abs(dir.y);
-		std::cout << "Colliding; Up" << std::endl;
 	}
 	else if (pos.y + diameter >= winHeight) {
 		isDead = true;
 		dir.y = -abs(dir.y);
-		std::cout << "Colliding; Down" << std::endl;
 	}
 }
 

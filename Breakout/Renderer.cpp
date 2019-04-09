@@ -29,7 +29,6 @@ void Renderer::DeleteRectangle(int id) {
 		if(renderObjects.at(i)==id) {
 			position = i;
 			initialized = true;
-			printf("Found %d!", position);
 		}
 	}
 	if(!initialized) {

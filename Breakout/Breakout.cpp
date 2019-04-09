@@ -76,7 +76,7 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 	BrickLayer BL;
 	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
-	std::vector<Block*>* map = BL.GetMap();
+	std::vector<std::vector<Block*>>* map = BL.GetMap();
 
 	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2),500.0f},Vector2{1.0f,0.5f}, 10.0f,127,127,127 };
 
