@@ -6,12 +6,15 @@ void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 	const int INIT_OFFSET_H = 100;
 	const int INIT_OFFSET_W = 1;
 
-	const int bWidth = windowWidth/10;		//Width of the blocks
-	const int bHeight = windowHeight/3/4;	//Height of the blocks
+	const int bCol = 10;
+	const int bRow = 4;
 
-	for (int i = 0; i < 10; i++) {
+	const int bWidth = windowWidth/bCol;		//Width of the blocks
+	const int bHeight = windowHeight/3/bRow;	//Height of the blocks
+
+	for (int i = 0; i < bCol; i++) {
 		std::vector<Block*> rowVector;
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < bRow; j++)
 		{
 			Vector2 pos{ float(INIT_OFFSET_W + i * bWidth),float(INIT_OFFSET_H + j * bHeight) };
 			auto* b = new Block{ pos,bHeight - 2,bWidth - 2,Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),Uint8(55 + rand() % 200) };
