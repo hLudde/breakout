@@ -2,6 +2,7 @@
 #include "Timer.h"
 #include "Renderer.h"
 #include <iostream>
+#include <algorithm>
 
 Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b): dir(dir), pos(pos), radius(radius)
 {
@@ -30,42 +31,57 @@ void Ball::MoveBall()
 
 void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<std::vector<Block*>>* map, Block* player)
 {
-	WallCollide(winWidth, winHeight);
-
-	const auto mapCheck = [this](std::vector<Block*>* curVec)
-	{
-		for (int i = 0; i < curVec->size(); i++)
-		{
-			if (IsColliding(curVec->at(i)))
-			{
-				ChangeDir(curVec->at(i));
-				int id = curVec->at(i)->GetRendererID();
-				Renderer::GetInstance().DeleteRectangle(id);
-				curVec->erase(curVec->begin() + i);
-			}
-		}
-	};
-
 	if (static_cast<int>(pos.y) < winHeight/2) 
 	{
-		if (static_cast<int>(pos.x) + diameter < winWidth / 2) {
-			for (int i = 0; i < map->size() / 2; i++)
+		/*checking collisions in entire map*/
+		for (auto& row : *map) {
+			for (int i = 0; i < row.size(); i++)
 			{
-				std::vector<Block*>* curVec = &map->at(i);
-				mapCheck(curVec);
+				Block* block = row.at(i);
+				if (IsColliding(block))
+				{
+					ChangeDir(block);
+					Renderer::GetInstance().DeleteRectangle(block->GetRendererID());
+					row.erase(row.begin() + i);
+				}
 			}
 		}
-		if (static_cast<int>(pos.x) + diameter >= winWidth / 2) {
-			for (int i = map->size() / 2; i < static_cast<int>(map->size()); i++)
-			{
-				std::vector<Block*>* curVec = &map->at(i);
-				mapCheck(curVec);
-			}
-		}
+
+		//const auto rowCheck = [this](std::vector<Block*>* row)
+		//{
+		//	for (int i = 0; i < row->size(); i++)
+		//	{
+		//		Block* block = row->at(i);
+		//		if (IsColliding(block))
+		//		{
+		//			ChangeDir(block);
+		//			Renderer::GetInstance().DeleteRectangle(block->GetRendererID());
+		//			row->erase(row->begin() + i);
+		//		}
+		//	}
+		//};
+
+		///*checking collisions for half the map at a time*/
+		//if (static_cast<int>(pos.x) + diameter < winWidth / 2) {
+		//	for (int i = 0; i < map->size() / 2; i++)
+		//	{
+		//		std::vector<Block*>* curVec = &map->at(i);
+		//		rowCheck(curVec);
+		//	}
+		//}
+		//if (static_cast<int>(pos.x) + diameter >= winWidth / 2) {
+		//	for (int i = map->size() / 2; i < static_cast<int>(map->size()); i++)
+		//	{
+		//		std::vector<Block*>* curVec = &map->at(i);
+		//		rowCheck(curVec);
+		//	}
+		//}
 	}
 
 	if (pos.y > winHeight/2 && IsColliding(player))
 		PlayerCollide(player);
+
+	WallCollide(winWidth, winHeight);
 
 	dir = dir.Normalize();
 }
