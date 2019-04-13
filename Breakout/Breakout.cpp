@@ -9,6 +9,7 @@
 #include "BrickLayer.h"
 #include "Ball.h"
 #include "Renderer.h"
+#include <future>
 
 #define FPS_INTERVAL 1.0 //seconds.
 #define PLAYER_WIDTH 100
@@ -85,6 +86,11 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		/*Input manager*/
 		timer.UpdateDeltaTime();
 		inputManager.Update();
+
+		auto collisionCheck = std::future<void>(std::async([&ball, &map, &player] {
+			ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
+		}));
+
 		player.MovePlayer();
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
@@ -92,8 +98,12 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		}
 		/*if (ball.IsDead())
 			Close(window);*/
-		ball.CheckCollision(SCREEN_HEIGHT,SCREEN_WIDTH,map,player.GetBlock());
+
+		//ball.CheckCollision(SCREEN_HEIGHT,SCREEN_WIDTH,map,player.GetBlock());
 		ball.MoveBall();
+
+		collisionCheck.wait();
+
 		renderer.Render();
 		fps_frames++;
 		if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL * 1000)
