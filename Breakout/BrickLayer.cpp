@@ -1,5 +1,6 @@
 ﻿#include "BrickLayer.h"
 #include "Block.h"
+#include <algorithm>
 
 void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 {
@@ -22,4 +23,16 @@ void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 		}
 		map.push_back(rowVector);
 	}
+}
+
+int BrickLayer::GetBlockCount() {
+	int count = 0;
+
+	std::for_each(std::begin(map), std::end(map), [&count](auto v) {
+		std::for_each(std::begin(v), std::end(v), [&count] {
+			count++;
+		});
+	});
+
+	return count;
 }

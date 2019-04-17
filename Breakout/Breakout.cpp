@@ -23,9 +23,9 @@ void CloseSDL(SDL_Window* &window);
 int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface);
 
 void CheckInput(InputManager& inputManager, bool &pause, bool &run);
-void MovePlayerBall(Player &player, Ball &ball, std::vector<std::vector<Block*>>* &map);
 void UpdateFPS(Uint32 & fpsLastTime, Uint32 & fpsFrames);
 void ResetPlayerBall(Player &player, Ball &ball, bool &pause, bool &run);
+void CollisionCheck(Ball &ball, std::vector<std::vector<Block*>>* &map, Player &player);
 
 /*main*/
 int main(int argc, char* argv[]) {
@@ -84,16 +84,28 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 	bool run = true;
 	bool pause = true;
+	std::future<void> collisionFuture;
 	/*GameLoop*/
 	while (run) {
 		timer.UpdateDeltaTime();
 
 		CheckInput(inputManager, pause, run);
 
-		if (!pause)
-			MovePlayerBall(player, ball, map);
-		if (ball.IsDead())
+		if (!pause) {
+			collisionFuture = std::future<void>(std::async([&player, &ball, &map] {CollisionCheck(ball, map, player); }));
+			player.MovePlayer();
+			ball.MoveBall();
+		}
+		if (ball.IsDead()) {
 			ResetPlayerBall(player, ball, pause, run);
+		}
+		if (brickLayer.GetBlockCount() == 0) {
+			brickLayer.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
+			map = brickLayer.GetMap();
+			ResetPlayerBall(player, ball, pause, run);
+		}
+
+		collisionFuture.wait();
 
 		renderer.Render();
 		UpdateFPS(fpsLastTime, fpsFrames);
@@ -120,16 +132,6 @@ void CheckInput(InputManager &inputManager, bool &pause, bool &run) {
 	}
 }
 
-void MovePlayerBall(Player &player, Ball &ball, std::vector<std::vector<Block*>>* &map) {
-	auto collisionCheck = std::future<void>(std::async([&ball, &map, &player] {
-		ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
-	}));
-
-	ball.MoveBall();
-	player.MovePlayer();
-	collisionCheck.wait();
-}
-
 void UpdateFPS(Uint32 &fpsLastTime, Uint32 &fpsFrames) {
 	fpsFrames++;
 
@@ -149,4 +151,8 @@ void ResetPlayerBall(Player& player, Ball& ball, bool &pause, bool &run) {
 	player.Reset();
 	ball.Reset(Vector2{ static_cast<int>(SCREEN_WIDTH / 2) - ball.GetRadius(),450.0f }, Vector2{ 0.0f,1.0f });
 	pause = true;
+}
+
+void CollisionCheck(Ball &ball, std::vector<std::vector<Block*>>*& map, Player &player) {
+	ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
 }
