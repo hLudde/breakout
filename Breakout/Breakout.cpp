@@ -22,9 +22,14 @@ const int SCREEN_WIDTH = 750+50;
 int lives = 3;
 
 /*Function signatures*/
-bool Init(SDL_Window* &window, SDL_Surface* &screenSurface);
-void Close(SDL_Window* &window);
-int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface);
+bool InitializeSDL(SDL_Window* &window, SDL_Surface* &screenSurface);
+void CloseSDL(SDL_Window* &window);
+int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface);
+
+void CheckInput(SDL_Window* &window, InputManager& inputManager, bool &pause, bool &run);
+void MovePlayerBall(Player &player, Ball &ball, std::vector<std::vector<Block*>>* &map);
+void UpdateFPS(Uint32 & fpsLastTime, Uint32 & fpsFrames);
+void ResetPlayerBall(Player &player, Ball &ball, int &lives, bool &pause, bool &run);
 
 /*main*/
 int main(int argc, char* argv[]) {
@@ -34,19 +39,18 @@ int main(int argc, char* argv[]) {
 	SDL_Surface* appScreenSurface = nullptr;
 
 	/*initialise SDL*/
-	if (!Init(appWindow, appScreenSurface)) {
-		Close(appWindow);
-		return 0;
+	if (!InitializeSDL(appWindow, appScreenSurface)) {
+		CloseSDL(appWindow);
+		return EXIT_FAILURE;
 	};
 	/*Prepare render and run game*/
 	std::cout << "Window : " << appWindow << " Created!" << std::endl;
-	LoadAndDisplayImage(appWindow, appScreenSurface);
-	Close(appWindow);
-	return EXIT_SUCCESS;
+	
+	return RunGame(appWindow, appScreenSurface);;
 }
 
 /*initializing function for SDL*/
-bool Init(SDL_Window* &window, SDL_Surface* &screenSurface) {
+bool InitializeSDL(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	bool success = true;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -66,73 +70,86 @@ bool Init(SDL_Window* &window, SDL_Surface* &screenSurface) {
 }
 
 /*renderer init and gameLoop*/
-int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
+int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
-	Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
-	Uint32 fps_frames = 0; //frames passed since the last recorded fps.
+	Uint32 fpsLastTime = SDL_GetTicks(); //the last recorded time.
+	Uint32 fpsFrames = 0; //frames passed since the last recorded fps.
 
 	Renderer& renderer = Renderer::Init(window);
-	Player player = Player(Vector2((SCREEN_WIDTH-PLAYER_WIDTH)/2, SCREEN_HEIGHT-150), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F, screenSurface->w);
+	Player player = Player(Vector2((SCREEN_WIDTH - PLAYER_WIDTH) / 2, SCREEN_HEIGHT - 150), PLAYER_HEIGHT, PLAYER_WIDTH, 0x12, 0xF2, 0x5F, screenSurface->w);
 	InputManager& inputManager = InputManager::GetInstance();
 	Timer&  timer = Timer::GetInstance();
-	///*renderer init STOP*/
 
 	BrickLayer BL;
 	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
 	std::vector<std::vector<Block*>>* map = BL.GetMap();
 
-	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2) - 10.0f,500.0f},Vector2{0.0f,1.0f}, 10.0f,127,127,127 };
+	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2) - 10.0f,450.0f},Vector2{0.0f,1.0f}, 10.0f,127,127,127 };
 
+	bool run = true;
 	bool pause = true;
 	/*GameLoop*/
-	while (true) {
-		/*Input manager*/
+	while (run) {
 		timer.UpdateDeltaTime();
-		inputManager.Update();
 
-		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
-			Close(window);
-			break;
-		}
-		if (inputManager.KeyDown(SDL_SCANCODE_SPACE)) {
-			pause = !pause;
-		}
-		if (ball.IsDead()){
-			if(--lives <= 0) {
-				Close(window);
-				break;
-			}
-			ball.Reset(Vector2{ static_cast<int>(SCREEN_WIDTH / 2) - ball.GetRadius(),500.0f }, Vector2{ 0.0f,1.0f });
-			pause = true;
-		}
+		CheckInput(window, inputManager, pause, run);
 
-		if (!pause) {
-			auto collisionCheck = std::future<void>(std::async([&ball, &map, &player] {
-				ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
-			}));
-
-			ball.MoveBall();
-
-			player.MovePlayer();
-
-			collisionCheck.wait();
-		}
+		if (!pause)
+			MovePlayerBall(player, ball, map);
+		if (ball.IsDead())
+			ResetPlayerBall(player, ball, lives, pause, run);
 
 		renderer.Render();
-		fps_frames++;
-		if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL * 1000)
-		{
-			fps_lasttime = SDL_GetTicks();
-			printf("FPS: %d\n", fps_frames);
-			fps_frames = 0;
-		}
+		UpdateFPS(fpsLastTime, fpsFrames);
 	}
+
+	CloseSDL(window);
 	return EXIT_SUCCESS;
 }
 
 /*cleaner and exiting function*/
-void Close(SDL_Window* &window) {
+	void CloseSDL(SDL_Window* &window) {
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-	return;
+}
+
+void CheckInput(SDL_Window*& window, InputManager &inputManager, bool &pause, bool &run) {
+	inputManager.Update();
+
+	if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
+		run = false;
+	}
+	if (inputManager.KeyDown(SDL_SCANCODE_SPACE)) {
+		pause = !pause;
+	}
+}
+
+void MovePlayerBall(Player &player, Ball &ball, std::vector<std::vector<Block*>>* &map) {
+	auto collisionCheck = std::future<void>(std::async([&ball, &map, &player] {
+		ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
+	}));
+
+	ball.MoveBall();
+	player.MovePlayer();
+	collisionCheck.wait();
+}
+
+void UpdateFPS(Uint32 &fpsLastTime, Uint32 &fpsFrames) {
+	fpsFrames++;
+
+	if (fpsLastTime < SDL_GetTicks() - FPS_INTERVAL * 1000)
+	{
+		fpsLastTime = SDL_GetTicks();
+		std::cout << "FPS: " << fpsFrames << std::endl;
+		fpsFrames = 0;
+	}
+}
+
+void ResetPlayerBall(Player& player, Ball& ball, int &lives, bool &pause, bool &run) {
+	if (--lives <= 0) {
+		run = false;
+	}
+	player.Reset();
+	ball.Reset(Vector2{ static_cast<int>(SCREEN_WIDTH / 2) - ball.GetRadius(),450.0f }, Vector2{ 0.0f,1.0f });
+	pause = true;
 }

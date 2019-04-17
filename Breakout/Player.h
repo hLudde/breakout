@@ -6,6 +6,8 @@ public:
 	void MovePlayer() const;
 	float GetPos() const;
 	Block* GetBlock() const { return player; }
+	void Reset() { player->GetPos()->x = 350.0f; }
+
 private:
 	float playerSpeed = .5f;
 	const int w;
