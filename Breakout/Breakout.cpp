@@ -14,10 +14,8 @@
 #define FPS_INTERVAL 1.0 //seconds.
 #define PLAYER_WIDTH 100
 #define PLAYER_HEIGHT 25
-
-/*two global variables just to set screen size*/
-const int SCREEN_HEIGHT = 750;
-const int SCREEN_WIDTH = 750+50;
+#define SCREEN_HEIGHT 750
+#define SCREEN_WIDTH 800
 
 /*Function signatures*/
 bool InitializeSDL(SDL_Window* &window, SDL_Surface* &screenSurface);
@@ -78,9 +76,9 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	InputManager& inputManager = InputManager::GetInstance();
 	Timer&  timer = Timer::GetInstance();
 
-	BrickLayer BL;
-	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
-	std::vector<std::vector<Block*>>* map = BL.GetMap();
+	BrickLayer brickLayer;
+	brickLayer.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	std::vector<std::vector<Block*>>* map = brickLayer.GetMap();
 
 	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2) - 10.0f,450.0f},Vector2{0.0f,1.0f}, 10.0f,127,127,127 };
 
