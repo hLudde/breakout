@@ -34,7 +34,7 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<s
 	if (static_cast<int>(pos.y) < winHeight/2) 
 	{
 		/*checking collisions in entire map*/
-		for (auto& row : *map) {
+		for (std::vector<Block*>& row : *map) {
 			for (int i = 0; i < row.size(); i++)
 			{
 				Block* block = row.at(i);

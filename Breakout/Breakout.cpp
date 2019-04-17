@@ -22,7 +22,7 @@ bool InitializeSDL(SDL_Window* &window, SDL_Surface* &screenSurface);
 void CloseSDL(SDL_Window* &window);
 int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface);
 
-void CheckInput(SDL_Window* &window, InputManager& inputManager, bool &pause, bool &run);
+void CheckInput(InputManager& inputManager, bool &pause, bool &run);
 void MovePlayerBall(Player &player, Ball &ball, std::vector<std::vector<Block*>>* &map);
 void UpdateFPS(Uint32 & fpsLastTime, Uint32 & fpsFrames);
 void ResetPlayerBall(Player &player, Ball &ball, bool &pause, bool &run);
@@ -88,7 +88,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	while (run) {
 		timer.UpdateDeltaTime();
 
-		CheckInput(window, inputManager, pause, run);
+		CheckInput(inputManager, pause, run);
 
 		if (!pause)
 			MovePlayerBall(player, ball, map);
@@ -109,7 +109,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	SDL_Quit();
 }
 
-void CheckInput(SDL_Window*& window, InputManager &inputManager, bool &pause, bool &run) {
+void CheckInput(InputManager &inputManager, bool &pause, bool &run) {
 	inputManager.Update();
 
 	if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
