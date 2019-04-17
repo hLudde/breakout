@@ -7,6 +7,8 @@ public:
 	float GetPos() const;
 	Block* GetBlock() const { return player; }
 	void Reset() { player->GetPos()->x = 350.0f; }
+	int GetLives() const { return lives; }
+	void DecrementLives() { lives--; }
 
 private:
 	float playerSpeed = .5f;
@@ -14,4 +16,5 @@ private:
 	Timer& timer = Timer::GetInstance();
 	InputManager& inputManager = InputManager::GetInstance();
 	Block* player;
+	int lives{ 3 };
 };

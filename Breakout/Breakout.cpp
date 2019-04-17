@@ -19,8 +19,6 @@
 const int SCREEN_HEIGHT = 750;
 const int SCREEN_WIDTH = 750+50;
 
-int lives = 3;
-
 /*Function signatures*/
 bool InitializeSDL(SDL_Window* &window, SDL_Surface* &screenSurface);
 void CloseSDL(SDL_Window* &window);
@@ -29,7 +27,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface);
 void CheckInput(SDL_Window* &window, InputManager& inputManager, bool &pause, bool &run);
 void MovePlayerBall(Player &player, Ball &ball, std::vector<std::vector<Block*>>* &map);
 void UpdateFPS(Uint32 & fpsLastTime, Uint32 & fpsFrames);
-void ResetPlayerBall(Player &player, Ball &ball, int &lives, bool &pause, bool &run);
+void ResetPlayerBall(Player &player, Ball &ball, bool &pause, bool &run);
 
 /*main*/
 int main(int argc, char* argv[]) {
@@ -97,7 +95,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		if (!pause)
 			MovePlayerBall(player, ball, map);
 		if (ball.IsDead())
-			ResetPlayerBall(player, ball, lives, pause, run);
+			ResetPlayerBall(player, ball, pause, run);
 
 		renderer.Render();
 		UpdateFPS(fpsLastTime, fpsFrames);
@@ -145,8 +143,9 @@ void UpdateFPS(Uint32 &fpsLastTime, Uint32 &fpsFrames) {
 	}
 }
 
-void ResetPlayerBall(Player& player, Ball& ball, int &lives, bool &pause, bool &run) {
-	if (--lives <= 0) {
+void ResetPlayerBall(Player& player, Ball& ball, bool &pause, bool &run) {
+	player.DecrementLives();
+	if (player.GetLives() <= 0) {
 		run = false;
 	}
 	player.Reset();
