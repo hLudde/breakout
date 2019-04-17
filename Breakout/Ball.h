@@ -18,6 +18,9 @@ public:
 	void MoveBall();
 	bool IsColliding(Block* block) const;
 	bool IsDead() const { return isDead; }
+
+	void Reset(Vector2 newPos, Vector2 newDir) { pos = newPos; dir = newDir.Normalize(); isDead = false; }
+
 private:
 	Vector2 dir;
 	Vector2 pos;

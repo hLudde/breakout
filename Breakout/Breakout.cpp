@@ -19,6 +19,8 @@
 const int SCREEN_HEIGHT = 750;
 const int SCREEN_WIDTH = 750+50;
 
+int lives = 3;
+
 /*Function signatures*/
 bool Init(SDL_Window* &window, SDL_Surface* &screenSurface);
 void Close(SDL_Window* &window);
@@ -79,30 +81,42 @@ int LoadAndDisplayImage(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	BL.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
 	std::vector<std::vector<Block*>>* map = BL.GetMap();
 
-	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2),500.0f},Vector2{1.0f,0.5f}, 10.0f,127,127,127 };
+	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2) - 10.0f,500.0f},Vector2{0.0f,1.0f}, 10.0f,127,127,127 };
 
+	bool pause = true;
 	/*GameLoop*/
 	while (true) {
 		/*Input manager*/
 		timer.UpdateDeltaTime();
 		inputManager.Update();
 
-		auto collisionCheck = std::future<void>(std::async([&ball, &map, &player] {
-			ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
-		}));
-
-		player.MovePlayer();
 		if (inputManager.KeyUp(SDL_SCANCODE_ESCAPE)) {
 			Close(window);
-			return EXIT_SUCCESS;
+			break;
 		}
-		/*if (ball.IsDead())
-			Close(window);*/
+		if (inputManager.KeyDown(SDL_SCANCODE_SPACE)) {
+			pause = !pause;
+		}
+		if (ball.IsDead()){
+			if(--lives <= 0) {
+				Close(window);
+				break;
+			}
+			ball.Reset(Vector2{ static_cast<int>(SCREEN_WIDTH / 2) - ball.GetRadius(),500.0f }, Vector2{ 0.0f,1.0f });
+			pause = true;
+		}
 
-		//ball.CheckCollision(SCREEN_HEIGHT,SCREEN_WIDTH,map,player.GetBlock());
-		ball.MoveBall();
+		if (!pause) {
+			auto collisionCheck = std::future<void>(std::async([&ball, &map, &player] {
+				ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
+			}));
 
-		collisionCheck.wait();
+			ball.MoveBall();
+
+			player.MovePlayer();
+
+			collisionCheck.wait();
+		}
 
 		renderer.Render();
 		fps_frames++;
