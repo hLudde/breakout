@@ -105,7 +105,8 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 			ResetPlayerBall(player, ball, pause, run);
 		}
 
-		collisionFuture.wait();
+		if (collisionFuture.valid())
+			collisionFuture.wait();
 
 		renderer.Render();
 		UpdateFPS(fpsLastTime, fpsFrames);

@@ -2,7 +2,6 @@
 #include "Timer.h"
 #include "Renderer.h"
 #include <iostream>
-#include <algorithm>
 
 Ball::Ball(Vector2 pos, Vector2 dir, float radius, Uint8 r, Uint8 g, Uint8 b): dir(dir), pos(pos), radius(radius)
 {
