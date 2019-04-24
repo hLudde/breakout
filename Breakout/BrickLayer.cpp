@@ -13,14 +13,12 @@ void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 	const int bHeight = windowHeight/3/bRow;	//Height of the blocks
 
 	for (int i = 0; i < bCol; i++) {
-		std::vector<Block*> rowVector;
 		for (int j = 0; j < bRow; j++)
 		{
 			const Vector2 pos{ float(INIT_OFFSET_W + i * bWidth),float(INIT_OFFSET_H + j * bHeight) };
 			auto* b = new Block{ pos,bHeight - 2,bWidth - 2,Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),Uint8(55 + rand() % 200) };
-			rowVector.push_back(b);
+			map.push_back(b);
 		}
-		map.push_back(rowVector);
 	}
 }
 
@@ -28,9 +26,7 @@ int BrickLayer::GetBlockCount() {
 	int count = 0;
 
 	for (auto v : map) {
-		for (auto b : v) {
 			count++;
-		}
 	}
 
 	return count;

@@ -9,9 +9,9 @@ public:
 
 	void CreateMap(int windowWidth, int windowHeight);
 
-	std::vector<std::vector<Block*>>* GetMap() { return &map; }
+	std::vector<Block*>* GetMap() { return &map; }
 	int GetBlockCount();
 
 private:
-	std::vector<std::vector<Block*>> map;
+	std::vector<Block*> map;
 };

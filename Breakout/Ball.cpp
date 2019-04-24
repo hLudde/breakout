@@ -28,21 +28,16 @@ void Ball::MoveBall()
 	rect.y = static_cast<int>(pos.y);
 }
 
-void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<std::vector<Block*>>* map, Block* player)
+void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<Block*>* map, Block* player)
 {
 	if (static_cast<int>(pos.y) < winHeight/2) 
 	{
-		/*checking collisions in entire map*/
-		for (std::vector<Block*>& row : *map) {
-			for (int i = 0; i < row.size(); i++)
-			{
-				Block* block = row.at(i);
-				if (IsColliding(block))
-				{
-					ChangeDir(block);
-					Renderer::GetInstance().DeleteRectangle(block->GetRendererID());
-					row.erase(row.begin() + i);
-				}
+		for (int i = 0; i < map->size(); i++) {
+			Block* b = map->at(i);
+			if (IsColliding(b)) {
+				ChangeDir(b);
+				Renderer::GetInstance().DeleteRectangle(b->GetRendererID());
+				map->erase(std::begin(*map) + i);
 			}
 		}
 

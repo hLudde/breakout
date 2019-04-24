@@ -25,7 +25,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface);
 void CheckInput(InputManager& inputManager, bool &pause, bool &run);
 void UpdateFPS(Uint32 & fpsLastTime, Uint32 & fpsFrames);
 void ResetPlayerBall(Player &player, Ball &ball, bool &pause, bool &run);
-void CollisionCheck(Ball &ball, std::vector<std::vector<Block*>>* &map, Player &player);
+void CollisionCheck(Ball &ball, std::vector<Block*>* &map, Player &player);
 
 /*main*/
 int main(int argc, char* argv[]) {
@@ -78,7 +78,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 	BrickLayer brickLayer;
 	brickLayer.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
-	std::vector<std::vector<Block*>>* map = brickLayer.GetMap();
+	std::vector<Block*>* map = brickLayer.GetMap();
 
 	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2) - 10.0f,450.0f},Vector2{0.0f,1.0f}, 10.0f,127,127,127 };
 
@@ -154,6 +154,6 @@ void ResetPlayerBall(Player& player, Ball& ball, bool &pause, bool &run) {
 	pause = true;
 }
 
-void CollisionCheck(Ball &ball, std::vector<std::vector<Block*>>*& map, Player &player) {
+void CollisionCheck(Ball &ball, std::vector<Block*>*& map, Player &player) {
 	ball.CheckCollision(SCREEN_HEIGHT, SCREEN_WIDTH, map, player.GetBlock());
 }

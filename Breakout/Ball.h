@@ -14,7 +14,7 @@ public:
 	Vector2 GetPos() const { return pos; }
 	SDL_Rect* GetRect() { return &rect; }
 
-	void CheckCollision(const int winHeight, const int winWidth, std::vector<std::vector<Block*>>* map, Block* player);
+	void CheckCollision(const int winHeight, const int winWidth, std::vector<Block*>* map, Block* player);
 	void MoveBall();
 	bool IsColliding(Block* block) const;
 	bool IsDead() const { return isDead; }
