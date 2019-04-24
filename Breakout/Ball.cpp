@@ -36,11 +36,14 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 			Block* b = map->at(i);
 			if (IsColliding(b)) {
 				ChangeDir(b);
-				b->DecHp();
 
-				if (b->GetHp() == 0) {
-					map->erase(std::begin(*map) + i);
-					Renderer::GetInstance().DeleteRectangle(b->GetRendererID());
+				if (b->GetHp() >= 0) {
+					b->DecHp();
+
+					if (b->GetHp() == 0) {
+						map->erase(std::begin(*map) + i);
+						Renderer::GetInstance().DeleteRectangle(b->GetRendererID());
+					}
 				}
 			}
 		}
