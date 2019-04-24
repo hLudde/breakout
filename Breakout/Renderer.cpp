@@ -52,3 +52,19 @@ void Renderer::Render() {
 	SDL_RenderClear(renderer);
 
 }
+
+void Renderer::ChangeRectangleColor(int id, Uint8 r, Uint8 g, Uint8 b) {
+	int index = -1;
+	for (int i = 0; i < renderObjects.size(); i++) {
+		if (renderObjects.at(i) == id){
+			index = i;
+			break;
+		}
+	}
+
+	SDL_Rect* rect = rectangles[index];
+	SDL_Surface* surf = SDL_CreateRGBSurface(0, rect->w, rect->h, 32, 0, 0, 0, 0);
+	SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, r, g, b));
+
+	textures[index] = SDL_CreateTextureFromSurface(renderer, surf);
+}

@@ -33,4 +33,6 @@ public:
 	int CreateRectangle(SDL_Rect* rectangle, Uint8 r, Uint8 g, Uint8 b, Vector2* pos);
 	void DeleteRectangle(int id);
 	void Render();
+
+	void ChangeRectangleColor(int id, Uint8 r, Uint8 g, Uint8 b);
 };

@@ -16,7 +16,8 @@ void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 		for (int j = 0; j < bRow; j++)
 		{
 			const Vector2 pos{ float(INIT_OFFSET_W + i * bWidth),float(INIT_OFFSET_H + j * bHeight) };
-			auto* b = new Block{ pos,bHeight - 2,bWidth - 2,Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),Uint8(55 + rand() % 200) };
+			//auto* b = new Block{ pos,bHeight - 2,bWidth - 2,Uint8(55 + rand() % 200),Uint8(55 + rand() % 200),Uint8(55 + rand() % 200) };
+			auto b = new Block{ pos, bHeight - 2, bWidth - 2, 1 + rand() % 3 };
 			map.push_back(b);
 		}
 	}

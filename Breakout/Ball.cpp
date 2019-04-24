@@ -36,40 +36,14 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 			Block* b = map->at(i);
 			if (IsColliding(b)) {
 				ChangeDir(b);
-				Renderer::GetInstance().DeleteRectangle(b->GetRendererID());
-				map->erase(std::begin(*map) + i);
+				b->DecHp();
+
+				if (b->GetHp() == 0) {
+					map->erase(std::begin(*map) + i);
+					Renderer::GetInstance().DeleteRectangle(b->GetRendererID());
+				}
 			}
 		}
-
-		//const auto rowCheck = [this](std::vector<Block*>* row)
-		//{
-		//	for (int i = 0; i < row->size(); i++)
-		//	{
-		//		Block* block = row->at(i);
-		//		if (IsColliding(block))
-		//		{
-		//			ChangeDir(block);
-		//			Renderer::GetInstance().DeleteRectangle(block->GetRendererID());
-		//			row->erase(row->begin() + i);
-		//		}
-		//	}
-		//};
-
-		///*checking collisions for half the map at a time*/
-		//if (static_cast<int>(pos.x) + diameter < winWidth / 2) {
-		//	for (int i = 0; i < map->size() / 2; i++)
-		//	{
-		//		std::vector<Block*>* curVec = &map->at(i);
-		//		rowCheck(curVec);
-		//	}
-		//}
-		//if (static_cast<int>(pos.x) + diameter >= winWidth / 2) {
-		//	for (int i = map->size() / 2; i < static_cast<int>(map->size()); i++)
-		//	{
-		//		std::vector<Block*>* curVec = &map->at(i);
-		//		rowCheck(curVec);
-		//	}
-		//}
 	}
 
 	if (pos.y > winHeight/2 && IsColliding(player))
