@@ -56,7 +56,7 @@ void BrickLayer::CreateMapFromFile(int windowWidth, int WindowHeight, const std:
 	}
 	file.close();
 
-	for (int i = 3; i < cList.size() - 1; i++)
+	for (int i = 3; i < cList.size() - 1; i++) //skip first 3 unrelated chars and eof char
 	{
 		int bType = cList.at(i) - '0';
 		if (bType < 0 || bType > 4)
