@@ -59,9 +59,7 @@ void BrickLayer::CreateMapFromFile(int windowWidth, int WindowHeight, const std:
 	for (int i = 3; i < cList.size() - 1; i++) //skip first 3 unrelated chars and eof char
 	{
 		int bType = cList.at(i) - '0';
-		if (bType < 0 || bType > 4)
-			bType = 1;
-		mapList.push_back(bType);
+		mapList.push_back(bType % 4);
 	}
 
 	CreateMap(windowWidth, WindowHeight, 10, 4, mapList);
