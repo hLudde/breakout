@@ -97,6 +97,7 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 			ball.MoveBall();
 		}
 		if (ball.IsDead()) {
+			player.DecrementLives();
 			ResetPlayerBall(player, ball, pause, run);
 		}
 		if (brickLayer.GetBlockCount() == 0) {
@@ -145,7 +146,6 @@ void UpdateFPS(Uint32 &fpsLastTime, Uint32 &fpsFrames) {
 }
 
 void ResetPlayerBall(Player& player, Ball& ball, bool &pause, bool &run) {
-	player.DecrementLives();
 	if (player.GetLives() <= 0) {
 		run = false;
 	}
