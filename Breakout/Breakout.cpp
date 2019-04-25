@@ -65,7 +65,7 @@ bool InitializeSDL(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	return success;
 }
 
-/*renderer init and gameLoop*/
+/*game init and gameLoop*/
 int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 
 	Uint32 fpsLastTime = SDL_GetTicks(); //the last recorded time.

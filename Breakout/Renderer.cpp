@@ -12,7 +12,7 @@ Renderer::Renderer(SDL_Window* &window) {
 int Renderer::CreateRectangle(SDL_Rect* rectangle, Uint8 r, Uint8 g, Uint8 b, Vector2* pos) {
 	const int rendererID = renderIDCounter++;
 	SDL_Surface* surface = SDL_CreateRGBSurface(0, rectangle->w, rectangle->h, 32, 0, 0, 0, 0);
-	SDL_FillRect(surface, nullptr/*new SDL_Rect{ rectangle->x, rectangle->y, rectangle->w, rectangle->h }*/, SDL_MapRGB(surface->format, r, g, b));
+	SDL_FillRect(surface, nullptr, SDL_MapRGB(surface->format, r, g, b));
 	positions.push_back(pos);
 	rectangles.push_back(rectangle);
 	textures.push_back(SDL_CreateTextureFromSurface(renderer, surface));

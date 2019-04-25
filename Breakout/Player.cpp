@@ -3,9 +3,13 @@
 #include "Timer.h"
 #include "Block.h"
 #include "Player.h"
+#include "Renderer.h"
 Player::Player(const Vector2 pos, const int h, const int w, const Uint8 r, const Uint8 g, const Uint8 b, const int screenWidth): w(screenWidth)
 {
 	player = new Block{ pos, h, w, r, g, b};
+	HealthRenderIds.push_back(Renderer::GetInstance().CreateRectangle(new SDL_Rect{ 0,0, 10,10 }, 255, 0, 0, new Vector2(700, 700)));
+	HealthRenderIds.push_back(Renderer::GetInstance().CreateRectangle(new SDL_Rect{ 0,0, 10,10 }, 255, 0, 0, new Vector2(720, 700)));
+	HealthRenderIds.push_back(Renderer::GetInstance().CreateRectangle(new SDL_Rect{ 0,0, 10,10 }, 255, 0, 0, new Vector2(740, 700)));
 }
 
 void Player::MovePlayer() const
