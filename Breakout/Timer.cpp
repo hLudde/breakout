@@ -9,7 +9,7 @@ void Timer::UpdateDeltaTime() {
 	last = now;
 	now = SDL_GetPerformanceCounter();
 	deltaTime = static_cast<double>(now - last) * 1000 / SDL_GetPerformanceFrequency();
-	if(deltaTime>20) {
+	if(deltaTime>20) {	//Limit dTime to 20ms to avoid large frame jumps.
 		deltaTime = static_cast<double>(20);
 	}
 }

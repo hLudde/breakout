@@ -76,6 +76,7 @@ void Ball::WallCollide(const int winWidth, const int winHeight)
 	}
 }
 
+//special collision system for the pad. Reflection angle is the vector from the pads center to the balls center.
 void Ball::PlayerCollide(Block* block)
 {
 	const Vector2 bCenter = pos + Vector2{ radius,radius };
@@ -114,6 +115,7 @@ void Ball::ChangeDir(Block* block)
 
 }
 
+//4 functions checks current position colliding and old position not colliding
 bool Ball::CollidedFromLeft(Block* block) const
 {
 	return pos.x + diameter >= block->GetPos()->x && oldPos.x + diameter < block->GetPos()->x;

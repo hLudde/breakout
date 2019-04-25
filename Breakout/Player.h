@@ -6,7 +6,7 @@ public:
 	void MovePlayer() const;
 	float GetPos() const;
 	Block* GetBlock() const { return player; }
-	void Reset() { player->GetPos()->x = 350.0f; }
+	void Reset() const { player->GetPos()->x = 350.0f; }
 	int GetLives() const { return lives; }
 	void DecrementLives() { lives--; }
 
