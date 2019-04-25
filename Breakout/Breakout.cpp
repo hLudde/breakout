@@ -77,7 +77,8 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 	Timer&  timer = Timer::GetInstance();
 
 	BrickLayer brickLayer;
-	brickLayer.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//brickLayer.CreateRandomMap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	brickLayer.CreateMapFromFile(SCREEN_WIDTH, SCREEN_HEIGHT, "map.txt");
 	std::vector<Block*>* map = brickLayer.GetMap();
 
 	Ball ball{ Vector2{static_cast<int>(SCREEN_WIDTH / 2) - 10.0f,450.0f},Vector2{0.0f,1.0f}, 10.0f,127,127,127 };
@@ -92,16 +93,16 @@ int RunGame(SDL_Window* &window, SDL_Surface* &screenSurface) {
 		CheckInput(inputManager, pause, run);
 
 		if (!pause) {
-			collisionFuture = std::future<void>(std::async([&player, &ball, &map] {CollisionCheck(ball, map, player); }));
 			player.MovePlayer();
 			ball.MoveBall();
+			collisionFuture = std::future<void>(std::async([&player, &ball, &map] {CollisionCheck(ball, map, player); }));
 		}
 		if (ball.IsDead()) {
 			player.DecrementLives();
 			ResetPlayerBall(player, ball, pause, run);
 		}
 		if (brickLayer.GetBlockCount() == 0) {
-			brickLayer.CreateMap(SCREEN_WIDTH, SCREEN_HEIGHT);
+			brickLayer.CreateRandomMap(SCREEN_WIDTH, SCREEN_HEIGHT);
 			map = brickLayer.GetMap();
 			ResetPlayerBall(player, ball, pause, run);
 		}
