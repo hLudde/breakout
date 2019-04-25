@@ -37,7 +37,7 @@ void Ball::CheckCollision(const int winHeight, const int winWidth, std::vector<B
 			if (IsColliding(b)) {
 				ChangeDir(b);
 
-				if (b->GetHp() >= 0) {
+				if (b->GetHp() > 0) {
 					b->DecHp();
 
 					if (b->GetHp() == 0) {
