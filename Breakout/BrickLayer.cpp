@@ -1,5 +1,6 @@
 ﻿#include "BrickLayer.h"
 #include "Block.h"
+#include <ctime>
 
 void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 {
@@ -11,6 +12,8 @@ void BrickLayer::CreateMap(const int windowWidth, const int windowHeight)
 
 	const int bWidth = windowWidth/bCol;		//Width of the blocks
 	const int bHeight = windowHeight/3/bRow;	//Height of the blocks
+
+	srand(time(nullptr));
 
 	for (int i = 0; i < bCol; i++) {
 		for (int j = 0; j < bRow; j++)
